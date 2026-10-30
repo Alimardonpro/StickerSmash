@@ -1,57 +1,77 @@
-# Welcome to your Expo app 👋
+# StickerSmash 🎨✨
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+[![CI/CD Pipeline](https://github.com/Alimardonpro/StickerSmash/actions/workflows/ci.yml/badge.svg)](https://github.com/Alimardonpro/StickerSmash/actions/workflows/ci.yml)
+![Expo SDK](https://img.shields.io/badge/Expo%20SDK-58.0-000000.svg)
+![React Native](https://img.shields.io/badge/React%20Native-0.88-61DAFB.svg)
+![Version](https://img.shields.io/badge/Version-1.0.1-brightgreen.svg)
 
-## Get started
+> Modern, universal photo sticker studio built with **Expo SDK 58**, **React Native 0.88**, and **Expo Router**. Runs seamlessly on **Android**, **iOS**, and **Web**.
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+## 📱 Yuklab olish (APK Download)
 
-2. Start the app
+- 📲 **To'g'ridan-to'g'ri APK yuklab olish (v1.0.1)**: [Yuklab olish (Direct APK)](https://expo.dev/artifacts/eas/3fVGZe1joor0-HsEFB2I3Ol4fKBOUTyLzWDd1oVeVeM.apk)
+- 🚀 **EAS Build sahifasi**: [EAS Build Details](https://expo.dev/accounts/alimardon23/projects/stickersmash/builds/a241f4bb-c586-4a3a-b1bd-fbadbdcdbd7c)
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## 🌟 Asosiy imkoniyatlar (Key Features)
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+1. **Studiyada rasmlarni tahrirlash (Photo Studio & Canvas)**:
+   - Kamera yoki galereyadan rasm yuklash
+   - Stikerlarni sudrab olib o'tish (Drag & Drop), kattalashtirish (Pinch to Zoom) va aylantirish (Rotate)
+   - Yuqori sifatli eksport (`react-native-view-shot` + `expo-media-library` / `expo-sharing`)
 
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+2. **iOS & Android Liquid Glass Floating Tab Bar**:
+   - `expo-blur` va `react-native-reanimated` yordamida yaratilgan zamonaviy muzlatilgan oyna (liquid glass pill) tab bar
+   - Yumshoq animatsiyali aktiv indikator kapsulasi
 
-## Get a fresh project
+3. **Ko'p tilli interfeys (Multi-language Support)**:
+   - 🇺🇿 O'zbekcha
+   - 🇷🇺 Русский
+   - 🇯🇵 日本語
+   - 🇺🇸 English
 
-When you're ready, run:
+4. **Tungi va Kunduzgi rejim (Dark / Light Theme)**:
+   - To'liq dinamik qora (AMOLED) va oq mavzu qo'llab-quvvatlanadi
+
+5. **Android Lifecycle & Camera Stability**:
+   - Android-da kamera ochilganda xotira kamligi sababli dastur qayta yuklansa ham rasmni saqlab qoluvchi `ImagePicker.getPendingResultAsync()` integratsiyasi
+
+6. **Web va Universal platforma qo'llab-quvvatlovi**:
+   - `npx expo export -p web` orqali to'liq veb-versiyaga eksport qilinadi va brauzerda ishlaydi
+
+7. **CI/CD Quvuri (GitHub Actions)**:
+   - Har bir `push` va `PR` da avtomatik TypeScript tekshiruvi (`tsc --noEmit`), `expo-doctor` tekshiruvi va Web versiyasini yig'ish (`dist`) amalga oshiriladi
+
+---
+
+## 🛠 Ishga tushirish (Local Setup)
 
 ```bash
-npm run reset-project
+# 1. Bog'liqliklarni o'rnatish
+npm install
+
+# 2. Loyihani ishga tushirish
+npx expo start
+
+# 3. Web rejimida ko'rish
+npx expo start --web
+
+# 4. TypeScript va konfiguratsiyani tekshirish
+npx tsc --noEmit
+npx expo-doctor
 ```
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+---
 
-### Other setup steps
+## 🚀 EAS Build & CI/CD
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+```bash
+# Android APK (preview profilida) yaratish
+eas build -p android --profile preview
 
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
-# StickerSmash
+# iOS Simulator uchun yig'ish
+eas build -p ios --profile preview
+```
