@@ -29,8 +29,8 @@ import { useTheme } from '@/context/theme-context';
 const PlaceholderImage = require('@/assets/images/background-image.png');
 const { width, height } = Dimensions.get('window');
 
-const CANVAS_WIDTH = Math.min(width - 48, 310);
-const CANVAS_HEIGHT = Math.round(Math.min(CANVAS_WIDTH * 1.30, height * 0.44));
+const CANVAS_WIDTH = Math.min(width - 32, 350);
+const CANVAS_HEIGHT = Math.round(Math.min(CANVAS_WIDTH * 1.34, height - 280));
 
 export default function StudioScreen() {
   const { t } = useLanguage();
@@ -437,20 +437,20 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 12,
+    paddingVertical: 6,
   },
   changePhotoPill: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    paddingHorizontal: 14,
-    paddingVertical: 7,
-    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 18,
     borderWidth: 1,
-    marginBottom: 12,
+    marginBottom: 8,
   },
   changePhotoText: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '600',
   },
   canvasFrame: {
@@ -464,8 +464,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    paddingTop: 10,
-    paddingBottom: Platform.OS === 'ios' ? 104 : 96,
+    paddingTop: 8,
+    paddingBottom: Platform.OS === 'ios' ? 88 : 80,
     borderTopWidth: StyleSheet.hairlineWidth,
   },
   actionBtn: {
