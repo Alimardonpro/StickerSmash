@@ -1,5 +1,6 @@
 import { SymbolView } from 'expo-symbols';
 import { BlurView } from 'expo-blur';
+import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
   Dimensions,
@@ -23,10 +24,10 @@ export type CustomTabBarProps = {
     index: number;
     routes: Array<{ key: string; name: string; params?: any }>;
   };
-  descriptors: Record<string, { options: any }>;
-  navigation: {
-    emit: (event: { type: string; target: string; canPreventDefault: boolean }) => { defaultPrevented: boolean };
-    navigate: (name: string, params?: any) => void;
+  descriptors?: Record<string, { options: any }>;
+  navigation?: {
+    emit?: (event: { type: string; target: string; canPreventDefault: boolean }) => { defaultPrevented?: boolean };
+    navigate?: (name: string, params?: any) => void;
   };
 };
 
@@ -58,6 +59,13 @@ const TAB_CONFIG: Record<
     sf: { default: 'gearshape', selected: 'gearshape.fill' },
     md: 'settings',
   },
+};
+
+const ROUTE_PATH_MAP: Record<string, string> = {
+  index: '/',
+  editor: '/editor',
+  creations: '/creations',
+  about: '/about',
 };
 
 const { width: screenWidth } = Dimensions.get('window');
@@ -160,14 +168,20 @@ export default function LiquidGlassTabBar({
             const label = t(config.translationKey);
 
             const onPress = () => {
-              const event = navigation.emit({
-                type: 'tabPress',
-                target: route.key,
-                canPreventDefault: true,
-              });
+              if (navigation && typeof navigation.emit === 'function') {
+                const event = navigation.emit({
+                  type: 'tabPress',
+                  target: route.key,
+                  canPreventDefault: true,
+                });
+                if (event?.defaultPrevented) return;
+              }
 
-              if (!isFocused && !event.defaultPrevented) {
+              if (navigation && typeof navigation.navigate === 'function') {
                 navigation.navigate(route.name, route.params);
+              } else {
+                const path = ROUTE_PATH_MAP[route.name] || `/${route.name}`;
+                router.replace(path as any);
               }
             };
 
