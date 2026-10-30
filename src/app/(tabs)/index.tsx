@@ -1,9 +1,11 @@
 import { SymbolView } from 'expo-symbols';
 import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
+import { useMemo, useState } from 'react';
 import {
   Alert,
   Dimensions,
+  FlatList,
   ScrollView,
   StyleSheet,
   Text,
@@ -14,19 +16,105 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
 import { useLanguage } from '@/context/language-context';
 import { useTheme } from '@/context/theme-context';
+import type { TranslationKey } from '@/localization/translations';
 
-const BasePhoto = require('@/assets/images/background-image.png');
-const StickerJelly = require('@/assets/images/emoji1.png');
-const StickerGlasses = require('@/assets/images/emoji4.png');
-const StickerStar = require('@/assets/images/emoji3.png');
+const ModelPhoto = require('@/assets/images/model-photo.jpg');
+
+// High-definition 3D Aesthetic Stickers
+const StkButterfly = require('@/assets/images/stickers/butterfly.png');
+const StkSparkles = require('@/assets/images/stickers/sparkles.png');
+const StkBlossom = require('@/assets/images/stickers/cherry-blossom.png');
+const StkCrown = require('@/assets/images/stickers/crown.png');
+const StkHeart = require('@/assets/images/stickers/sparkling-heart.png');
+const StkHeartsSmile = require('@/assets/images/stickers/hearts-smile.png');
+const StkCoolSmile = require('@/assets/images/stickers/cool-smile.png');
+const StkPartySmile = require('@/assets/images/stickers/party-smile.png');
+const StkStar = require('@/assets/images/stickers/star.png');
+const StkRibbon = require('@/assets/images/stickers/ribbon.png');
 
 const { width } = Dimensions.get('window');
-const CARD_WIDTH = (width - 56) / 2;
-const CARD_HEIGHT = CARD_WIDTH * 1.35;
+const CAROUSEL_CARD_WIDTH = Math.round(width * 0.74);
+const CAROUSEL_CARD_HEIGHT = Math.round(CAROUSEL_CARD_WIDTH * 1.35);
+
+type FilterCategory = 'all' | 'portrait' | 'fun' | 'party' | 'art';
+
+type ShowcaseItem = {
+  id: string;
+  category: 'portrait' | 'fun' | 'party' | 'art';
+  titleKey: TranslationKey;
+  descKey: TranslationKey;
+  tag: string;
+  stickers: {
+    source: any;
+    top?: `${number}%` | number;
+    bottom?: `${number}%` | number;
+    left?: `${number}%` | number;
+    right?: `${number}%` | number;
+    widthPercent: number;
+    heightPercent: number;
+  }[];
+};
+
+const SHOWCASE_ITEMS: ShowcaseItem[] = [
+  {
+    id: 'res-1',
+    category: 'portrait',
+    titleKey: 'cardResult1Title',
+    descKey: 'cardResult1Desc',
+    tag: '🦋 Aesthetic',
+    stickers: [
+      { source: StkButterfly, bottom: '20%', left: '8%', widthPercent: 0.32, heightPercent: 0.32 },
+      { source: StkSparkles, top: '10%', right: '10%', widthPercent: 0.28, heightPercent: 0.28 },
+      { source: StkStar, top: '22%', left: '10%', widthPercent: 0.22, heightPercent: 0.22 },
+    ],
+  },
+  {
+    id: 'res-2',
+    category: 'art',
+    titleKey: 'cardResult2Title',
+    descKey: 'cardResult2Desc',
+    tag: '👑 Princess Glow',
+    stickers: [
+      { source: StkCrown, top: '4%', left: '36%', widthPercent: 0.3, heightPercent: 0.22 },
+      { source: StkBlossom, top: '20%', right: '12%', widthPercent: 0.26, heightPercent: 0.26 },
+      { source: StkSparkles, bottom: '22%', right: '10%', widthPercent: 0.24, heightPercent: 0.24 },
+    ],
+  },
+  {
+    id: 'res-3',
+    category: 'fun',
+    titleKey: 'cardResult3Title',
+    descKey: 'cardResult3Desc',
+    tag: '🥰 Lovely Sweet',
+    stickers: [
+      { source: StkHeartsSmile, bottom: '18%', right: '8%', widthPercent: 0.3, heightPercent: 0.3 },
+      { source: StkHeart, top: '12%', left: '10%', widthPercent: 0.26, heightPercent: 0.26 },
+      { source: StkRibbon, bottom: '22%', left: '10%', widthPercent: 0.25, heightPercent: 0.25 },
+    ],
+  },
+  {
+    id: 'res-4',
+    category: 'party',
+    titleKey: 'cardResult4Title',
+    descKey: 'cardResult4Desc',
+    tag: '🎉 Festive Joy',
+    stickers: [
+      { source: StkPartySmile, top: '10%', right: '8%', widthPercent: 0.3, heightPercent: 0.3 },
+      { source: StkCoolSmile, bottom: '18%', left: '8%', widthPercent: 0.28, heightPercent: 0.28 },
+      { source: StkStar, top: '8%', left: '12%', widthPercent: 0.24, heightPercent: 0.24 },
+    ],
+  },
+];
 
 export default function DashboardScreen() {
   const { t } = useLanguage();
   const { colors } = useTheme();
+  const [activeFilter, setActiveFilter] = useState<FilterCategory>('all');
+
+  const filteredItems = useMemo(() => {
+    if (activeFilter === 'all') return SHOWCASE_ITEMS;
+    return SHOWCASE_ITEMS.filter((item) => item.category === activeFilter);
+  }, [activeFilter]);
 
   const handlePickPhoto = async () => {
     try {
@@ -59,7 +147,7 @@ export default function DashboardScreen() {
         style={styles.container}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}>
-        {/* Minimal Header */}
+        {/* Header */}
         <View style={styles.header}>
           <Text style={[styles.title, { color: colors.text }]}>
             {t('dashboardTitle')}
@@ -69,129 +157,214 @@ export default function DashboardScreen() {
           </Text>
         </View>
 
-        {/* Before & After Showcase */}
-        <View style={styles.comparisonContainer}>
-          {/* Card 1: Before (Original) */}
-          <View style={[styles.showcaseCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-            <View style={[styles.badge, { backgroundColor: colors.surface2 }]}>
-              <Text style={[styles.badgeText, { color: colors.textSecondary }]}>
-                {t('originalPhoto')}
-              </Text>
-            </View>
-            <View style={[styles.photoFrame, { width: CARD_WIDTH, height: CARD_HEIGHT }]}>
-              <Image source={BasePhoto} style={styles.photo} contentFit="cover" />
-            </View>
-          </View>
-
-          {/* Card 2: After (With Stickers) */}
-          <View style={[styles.showcaseCard, { backgroundColor: colors.surface, borderColor: colors.accent }]}>
-            <View style={[styles.badge, { backgroundColor: colors.accent }]}>
-              <Text style={[styles.badgeText, { color: colors.accentText, fontWeight: '700' }]}>
-                {t('withStickers')} ✨
-              </Text>
-            </View>
-            <View style={[styles.photoFrame, { width: CARD_WIDTH, height: CARD_HEIGHT }]}>
-              <Image source={BasePhoto} style={styles.photo} contentFit="cover" />
-
-              {/* Decorative Stickers demonstrating the app */}
-              <Image
-                source={StickerGlasses}
-                style={[
-                  styles.stickerGlasses,
-                  { width: CARD_WIDTH * 0.45, height: CARD_WIDTH * 0.25 },
-                ]}
-                contentFit="contain"
-              />
-              <Image
-                source={StickerJelly}
-                style={[
-                  styles.stickerJelly,
-                  { width: CARD_WIDTH * 0.32, height: CARD_WIDTH * 0.32 },
-                ]}
-                contentFit="contain"
-              />
-              <Image
-                source={StickerStar}
-                style={[
-                  styles.stickerStar,
-                  { width: CARD_WIDTH * 0.26, height: CARD_WIDTH * 0.26 },
-                ]}
-                contentFit="contain"
-              />
-            </View>
-          </View>
-        </View>
-
-        {/* How It Works Section */}
-        <View style={[styles.infoCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-          <Text style={[styles.infoTitle, { color: colors.text }]}>
-            {t('howItWorks')}
+        {/* Section Header */}
+        <View style={styles.sectionHeaderRow}>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+            {t('resultsShowcase')}
           </Text>
+        </View>
 
-          <View style={styles.stepItem}>
-            <View style={[styles.stepIconBox, { backgroundColor: colors.surface2 }]}>
-              <SymbolView
-                name={{ ios: 'photo.on.rectangle', android: 'image', web: 'image' }}
-                size={20}
-                tintColor={colors.accent}
-              />
-            </View>
-            <View style={styles.stepContent}>
-              <Text style={[styles.stepTitle, { color: colors.text }]}>
-                {t('step1Title')}
+        {/* Filter Buttons in a Smooth Horizontal ScrollView */}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.filterScroll}
+          style={styles.filterContainer}>
+          {(['all', 'portrait', 'fun', 'party', 'art'] as FilterCategory[]).map((cat) => {
+            const isSelected = activeFilter === cat;
+            const filterLabel =
+              cat === 'all'
+                ? t('filterAll')
+                : cat === 'portrait'
+                ? t('filterPortrait')
+                : cat === 'fun'
+                ? t('filterFun')
+                : cat === 'party'
+                ? t('filterParty')
+                : t('filterArt');
+
+            return (
+              <TouchableOpacity
+                key={cat}
+                style={[
+                  styles.filterChip,
+                  {
+                    backgroundColor: isSelected ? colors.accent : colors.surface,
+                    borderColor: isSelected ? colors.accent : colors.border,
+                  },
+                ]}
+                activeOpacity={0.75}
+                onPress={() => setActiveFilter(cat)}>
+                <Text
+                  style={[
+                    styles.filterChipText,
+                    {
+                      color: isSelected ? colors.accentText : colors.textSecondary,
+                      fontWeight: isSelected ? '700' : '500',
+                    },
+                  ]}>
+                  {filterLabel}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </ScrollView>
+
+        {/* Large Horizontal Results Carousel */}
+        <FlatList
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          data={filteredItems}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.carouselList}
+          snapToInterval={CAROUSEL_CARD_WIDTH + 16}
+          decelerationRate="fast"
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={[
+                styles.carouselCard,
+                {
+                  width: CAROUSEL_CARD_WIDTH,
+                  backgroundColor: colors.surface,
+                  borderColor: colors.border,
+                },
+              ]}
+              activeOpacity={0.9}
+              onPress={handleStartCreating}>
+              {/* Photo Frame with Girl's Photo & 3D Aesthetic Stickers */}
+              <View
+                style={[
+                  styles.cardMediaContainer,
+                  { height: CAROUSEL_CARD_HEIGHT },
+                ]}>
+                <Image source={ModelPhoto} style={styles.cardImage} contentFit="cover" />
+
+                {/* Floating Tag */}
+                <View style={styles.cardTagBadge}>
+                  <Text style={styles.cardTagText}>{item.tag}</Text>
+                </View>
+
+                {/* Layered Result 3D Stickers */}
+                {item.stickers.map((stk, idx) => (
+                  <Image
+                    key={idx}
+                    source={stk.source}
+                    style={{
+                      position: 'absolute',
+                      top: stk.top,
+                      bottom: stk.bottom,
+                      left: stk.left,
+                      right: stk.right,
+                      width: CAROUSEL_CARD_WIDTH * stk.widthPercent,
+                      height: CAROUSEL_CARD_WIDTH * stk.heightPercent,
+                      shadowColor: '#000',
+                      shadowOffset: { width: 0, height: 4 },
+                      shadowOpacity: 0.25,
+                      shadowRadius: 6,
+                    }}
+                    contentFit="contain"
+                  />
+                ))}
+              </View>
+
+              {/* Card Meta / Caption */}
+              <View style={styles.cardInfo}>
+                <Text style={[styles.cardTitle, { color: colors.text }]} numberOfLines={2}>
+                  {t(item.titleKey)}
+                </Text>
+                <Text style={[styles.cardDesc, { color: colors.textSecondary }]} numberOfLines={2}>
+                  {t(item.descKey)}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          )}
+        />
+
+        {/* Detailed Explanation / Project Purpose (Below the Carousel) */}
+        <View style={styles.articlesContainer}>
+          {/* Mission & Purpose Card */}
+          <View style={[styles.detailCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <View style={styles.cardHeaderRow}>
+              <View style={[styles.iconPill, { backgroundColor: colors.surface2 }]}>
+                <SymbolView
+                  name={{ ios: 'target', android: 'track_changes', web: 'flag' }}
+                  size={20}
+                  tintColor={colors.accent}
+                />
+              </View>
+              <Text style={[styles.detailCardTitle, { color: colors.text }]}>
+                {t('projectGoalTitle')}
               </Text>
-              <Text style={[styles.stepDesc, { color: colors.textSecondary }]}>
-                {t('step1Desc')}
-              </Text>
             </View>
+            <Text style={[styles.detailCardBody, { color: colors.textSecondary }]}>
+              {t('projectGoalText')}
+            </Text>
           </View>
 
-          <View style={styles.stepDivider}>
-            <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
-          </View>
-
-          <View style={styles.stepItem}>
-            <View style={[styles.stepIconBox, { backgroundColor: colors.surface2 }]}>
-              <SymbolView
-                name={{ ios: 'wand.and.stars', android: 'auto_awesome', web: 'auto_awesome' }}
-                size={20}
-                tintColor={colors.accent}
-              />
-            </View>
-            <View style={styles.stepContent}>
-              <Text style={[styles.stepTitle, { color: colors.text }]}>
-                {t('step2Title')}
-              </Text>
-              <Text style={[styles.stepDesc, { color: colors.textSecondary }]}>
-                {t('step2Desc')}
+          {/* How App Works Card */}
+          <View style={[styles.detailCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <View style={styles.cardHeaderRow}>
+              <View style={[styles.iconPill, { backgroundColor: colors.surface2 }]}>
+                <SymbolView
+                  name={{ ios: 'sparkles', android: 'auto_awesome', web: 'auto_awesome' }}
+                  size={20}
+                  tintColor={colors.accent}
+                />
+              </View>
+              <Text style={[styles.detailCardTitle, { color: colors.text }]}>
+                {t('howItWorksTitle')}
               </Text>
             </View>
+            <Text style={[styles.detailCardBody, { color: colors.textSecondary }]}>
+              {t('howItWorksText')}
+            </Text>
           </View>
 
-          <View style={styles.stepDivider}>
-            <View style={[styles.dividerLine, { backgroundColor: colors.border }]} />
-          </View>
-
-          <View style={styles.stepItem}>
-            <View style={[styles.stepIconBox, { backgroundColor: colors.surface2 }]}>
-              <SymbolView
-                name={{ ios: 'arrow.down.to.line', android: 'save', web: 'save' }}
-                size={20}
-                tintColor={colors.accent}
-              />
+          {/* Key Advantages Grid */}
+          <View style={[styles.detailCard, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+            <View style={styles.featureItem}>
+              <View style={[styles.featureBullet, { backgroundColor: colors.accent }]} />
+              <View style={styles.featureContent}>
+                <Text style={[styles.featureItemTitle, { color: colors.text }]}>
+                  {t('feature1Title')}
+                </Text>
+                <Text style={[styles.featureItemDesc, { color: colors.textSecondary }]}>
+                  {t('feature1Desc')}
+                </Text>
+              </View>
             </View>
-            <View style={styles.stepContent}>
-              <Text style={[styles.stepTitle, { color: colors.text }]}>
-                {t('step3Title')}
-              </Text>
-              <Text style={[styles.stepDesc, { color: colors.textSecondary }]}>
-                {t('step3Desc')}
-              </Text>
+
+            <View style={[styles.featureDivider, { backgroundColor: colors.border }]} />
+
+            <View style={styles.featureItem}>
+              <View style={[styles.featureBullet, { backgroundColor: colors.accent }]} />
+              <View style={styles.featureContent}>
+                <Text style={[styles.featureItemTitle, { color: colors.text }]}>
+                  {t('feature2Title')}
+                </Text>
+                <Text style={[styles.featureItemDesc, { color: colors.textSecondary }]}>
+                  {t('feature2Desc')}
+                </Text>
+              </View>
+            </View>
+
+            <View style={[styles.featureDivider, { backgroundColor: colors.border }]} />
+
+            <View style={styles.featureItem}>
+              <View style={[styles.featureBullet, { backgroundColor: colors.accent }]} />
+              <View style={styles.featureContent}>
+                <Text style={[styles.featureItemTitle, { color: colors.text }]}>
+                  {t('feature3Title')}
+                </Text>
+                <Text style={[styles.featureItemDesc, { color: colors.textSecondary }]}>
+                  {t('feature3Desc')}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
 
-        {/* Primary Action Buttons */}
+        {/* Action Buttons */}
         <View style={styles.actionsContainer}>
           <TouchableOpacity
             style={[styles.primaryBtn, { backgroundColor: colors.accent }]}
@@ -234,12 +407,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    padding: 20,
-    paddingTop: 12,
     paddingBottom: 110,
   },
   header: {
-    marginBottom: 20,
+    paddingHorizontal: 20,
+    paddingTop: 12,
+    marginBottom: 16,
   },
   title: {
     fontSize: 26,
@@ -251,96 +424,144 @@ const styles = StyleSheet.create({
     marginTop: 4,
     fontWeight: '400',
   },
-  comparisonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
+  sectionHeaderRow: {
+    paddingHorizontal: 20,
+    marginBottom: 10,
   },
-  showcaseCard: {
-    borderRadius: 16,
-    padding: 6,
-    borderWidth: 1.5,
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    letterSpacing: -0.2,
+  },
+  filterContainer: {
+    marginBottom: 14,
+  },
+  filterScroll: {
+    paddingHorizontal: 20,
+    gap: 8,
+    paddingBottom: 4,
+  },
+  filterChip: {
+    flexShrink: 0,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+  },
+  filterChipText: {
+    fontSize: 13,
+  },
+  carouselList: {
+    paddingHorizontal: 20,
+    gap: 16,
+    paddingBottom: 8,
+  },
+  carouselCard: {
+    borderRadius: 20,
     overflow: 'hidden',
+    borderWidth: 1.5,
   },
-  badge: {
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-    borderRadius: 8,
-    alignSelf: 'center',
-    marginBottom: 6,
-  },
-  badgeText: {
-    fontSize: 11,
-    fontWeight: '600',
-  },
-  photoFrame: {
-    borderRadius: 12,
+  cardMediaContainer: {
+    width: '100%',
     overflow: 'hidden',
     position: 'relative',
   },
-  photo: {
+  cardImage: {
     width: '100%',
     height: '100%',
   },
-  stickerGlasses: {
+  cardTagBadge: {
     position: 'absolute',
-    top: '22%',
-    left: '26%',
+    top: 12,
+    left: 12,
+    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 12,
   },
-  stickerJelly: {
-    position: 'absolute',
-    bottom: '12%',
-    left: '8%',
+  cardTagText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '600',
   },
-  stickerStar: {
-    position: 'absolute',
-    top: '10%',
-    right: '8%',
+  cardInfo: {
+    padding: 14,
+    minHeight: 76,
+    justifyContent: 'center',
   },
-  infoCard: {
-    borderRadius: 16,
+  cardTitle: {
+    fontSize: 15,
+    fontWeight: '700',
+    marginBottom: 3,
+  },
+  cardDesc: {
+    fontSize: 12,
+    lineHeight: 16,
+  },
+  articlesContainer: {
+    paddingHorizontal: 20,
+    marginTop: 18,
+    gap: 14,
+  },
+  detailCard: {
+    borderRadius: 18,
     borderWidth: 1,
     padding: 18,
-    marginBottom: 20,
   },
-  infoTitle: {
-    fontSize: 17,
-    fontWeight: '700',
-    marginBottom: 16,
-  },
-  stepItem: {
+  cardHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 12,
+    marginBottom: 12,
   },
-  stepIconBox: {
-    width: 40,
-    height: 40,
+  iconPill: {
+    width: 38,
+    height: 38,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 14,
   },
-  stepContent: {
+  detailCardTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    flex: 1,
+    letterSpacing: -0.2,
+  },
+  detailCardBody: {
+    fontSize: 14,
+    lineHeight: 21,
+  },
+  featureItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
+  },
+  featureBullet: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginTop: 6,
+  },
+  featureContent: {
     flex: 1,
   },
-  stepTitle: {
+  featureItemTitle: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '700',
     marginBottom: 2,
   },
-  stepDesc: {
-    fontSize: 12,
+  featureItemDesc: {
+    fontSize: 13,
+    lineHeight: 18,
   },
-  stepDivider: {
-    paddingLeft: 20,
-    marginVertical: 10,
-  },
-  dividerLine: {
-    width: 2,
-    height: 12,
-    borderRadius: 1,
+  featureDivider: {
+    height: StyleSheet.hairlineWidth,
+    marginVertical: 12,
+    marginLeft: 20,
   },
   actionsContainer: {
+    paddingHorizontal: 20,
+    marginTop: 20,
     gap: 10,
   },
   primaryBtn: {

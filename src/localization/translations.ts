@@ -9,21 +9,47 @@ export const TRANSLATIONS = {
     tabSettings: 'Sozlamalar',
 
     // Dashboard Showcase
-    dashboardTitle: 'StickerSmash',
-    dashboardSubtitle: 'Rasmlaringizni stikerlar bilan jonlantiring',
-    before: 'Oldin',
-    after: 'Keyin',
-    originalPhoto: 'Oddiy rasm',
-    withStickers: 'Stikerlar bilan',
-    howItWorks: 'Qanday ishlaydi?',
-    step1Title: '1. Rasm tanlang',
-    step1Desc: 'Galereyadan oling yoki kamerada rasmga tushing',
-    step2Title: '2. Stikerlar qo\'shing',
-    step2Desc: 'Surish va masshtablash orqali bezang',
-    step3Title: '3. Saqlang va ulashing',
-    step3Desc: 'Fotogalereyaga bir bosishda saqlang',
+    dashboardTitle: 'StickerSmash Studio',
+    dashboardSubtitle: 'Fotosuratlarga jonli stikerlar bilan yangi hayot bag\'ishlang',
+    resultsShowcase: 'Loyiha natijalari',
+    filterAll: 'Barchasi',
+    filterPortrait: 'Portret',
+    filterFun: 'Qiziqarli',
+    filterParty: 'Bayramona',
+    filterArt: 'Badiiy',
+
+    // Showcase Card Titles
+    cardResult1Title: 'Kapalak va yorqin uchqunlar',
+    cardResult1Desc: 'Nafis 3D kapalak va estetik yulduzchalar',
+    cardResult2Title: 'Nafis qirolicha',
+    cardResult2Desc: 'Tilla toj va gullar bilan bezatilgan portret',
+    cardResult3Title: 'Mehrli tabassum va yurakchalar',
+    cardResult3Desc: '3D mehrli smaylik va jozibali lentalar',
+    cardResult4Title: 'Quvnoq bayramona kayfiyat',
+    cardResult4Desc: 'Bayramona smaylik va yorug\'lik effektlari',
+
+    // Project Explanation & Goal
+    projectGoalTitle: 'Loyiha maqsadi va vazifasi',
+    projectGoalText: 'StickerSmash — har bir foydalanuvchiga fotosuratlarni osongina badiiy san\'at asariga aylantirish imkonini beruvchi zamonaviy mobil ilova. Loyihaning asosiy maqsadi har qanday oddiy selfi, portret yoki tabiat suratiga rang-barang stikerlar qo\'shish orqali unutilmas va hissiyotga boy kompozitsiyalar yaratishdan iborat.',
+    howItWorksTitle: 'Ilova qanday ishlaydi?',
+    howItWorksText: 'Ilova to\'liq foydalanuvchiga yo\'naltirilgan: siz o\'z suratingizni galereyadan tanlaysiz yoki kameradan suratga tushirasiz. So\'ngra boy stikerlar to\'plamidan istalgan elementni kanvasga joylab, uni barmog\'ingiz bilan erkin surishingiz, ikki marta bosish orqali masshtabini o\'zgartirishingiz mumkin. Tayyor natija bir soniyada fotogalereyaga saqlanadi.',
+    feature1Title: 'Erkin boshqaruv',
+    feature1Desc: 'Stikerlarni kanvas bo\'ylab surish va o\'lchamini oson o\'zgartirish.',
+    feature2Title: 'Maxfiylik va tezlik',
+    feature2Desc: 'Barcha jarayonlar to\'liq telefoningizda oflayn kechadi.',
+    feature3Title: 'Sifatli saqlash',
+    feature3Desc: 'Hech qanday keraksiz belgilarsiz toza va tiniq eksport.',
+
     startCreating: 'Ijod qilishni boshlash',
     choosePhotoBtn: 'Rasm tanlash',
+
+    // Picker Categories & API
+    tab3dArt: '3D Stiker',
+    tabEmojis: 'Emojilar',
+    tabBadges: 'Nishonlar',
+    tabOnlineApi: '🌐 Onlayn API',
+    loadingApi: 'API orqali yangi emojilar yuklanmoqda...',
+    refreshApi: 'Yangilash',
 
     // Studio Screen
     choosePhoto: 'Rasm tanlash',
@@ -82,21 +108,47 @@ export const TRANSLATIONS = {
     tabSettings: 'Настройки',
 
     // Dashboard Showcase
-    dashboardTitle: 'StickerSmash',
-    dashboardSubtitle: 'Оживляйте ваши фотографии яркими стикерами',
-    before: 'До',
-    after: 'После',
-    originalPhoto: 'Обычное фото',
-    withStickers: 'Со стикерами',
-    howItWorks: 'Как это работает?',
-    step1Title: '1. Выберите фото',
-    step1Desc: 'Из галереи или снимите на камеру',
-    step2Title: '2. Добавьте стикеры',
-    step2Desc: 'Перемещайте и масштабируйте',
-    step3Title: '3. Сохраняйте',
-    step3Desc: 'В галерею или делитесь с друзьями',
+    dashboardTitle: 'StickerSmash Studio',
+    dashboardSubtitle: 'Вдохните новую жизнь в ваши фотографии с помощью стикеров',
+    resultsShowcase: 'Результаты проекта',
+    filterAll: 'Все',
+    filterPortrait: 'Портрет',
+    filterFun: 'Забавные',
+    filterParty: 'Праздничные',
+    filterArt: 'Арт',
+
+    // Showcase Card Titles
+    cardResult1Title: 'Бабочка и сияние',
+    cardResult1Desc: 'Изящная 3D-бабочка и эстетичные искры',
+    cardResult2Title: 'Элегантная корона',
+    cardResult2Desc: 'Портрет с золотой короной и весенними цветами',
+    cardResult3Title: 'Улыбка и нежные сердца',
+    cardResult3Desc: 'Милый 3D-смайлик и романтичные ленты',
+    cardResult4Title: 'Праздничный восторг',
+    cardResult4Desc: 'Праздничный смайлик и эффекты сияния',
+
+    // Project Explanation & Goal
+    projectGoalTitle: 'Цель и миссия проекта',
+    projectGoalText: 'StickerSmash — это современная мобильная студия, позволяющая каждому пользователю легко превратить обычные фотографии в уникальные визуальные работы. Главная цель проекта — дать возможность быстро и весело украшать любые снимки яркими стикерами, создавая памятные и эмоциональные композиции.',
+    howItWorksTitle: 'Как работает приложение?',
+    howItWorksText: 'Процесс максимально прост: вы выбираете фото из галереи или делаете снимок на камеру. Затем выбираете стикер из каталога, легко перемещаете его пальцем по холсту и масштабируете двойным касанием. Готовый результат в одно касание сохраняется в фотогалерею устройства в высоком качестве.',
+    feature1Title: 'Свободное управление',
+    feature1Desc: 'Перемещение, масштабирование и удаление стикеров жестами.',
+    feature2Title: 'Конфиденциальность и скорость',
+    feature2Desc: 'Все операции выполняются на устройстве без интернета.',
+    feature3Title: 'Чистый экспорт',
+    feature3Desc: 'Сохранение без водяных знаков в оригинальном качестве.',
+
     startCreating: 'Начать создание',
     choosePhotoBtn: 'Выбрать фото',
+
+    // Picker Categories & API
+    tab3dArt: '3D Стикеры',
+    tabEmojis: 'Эмодзи',
+    tabBadges: 'Значки',
+    tabOnlineApi: '🌐 Онлайн API',
+    loadingApi: 'Загрузка эмодзи из API...',
+    refreshApi: 'Обновить',
 
     // Studio Screen
     choosePhoto: 'Выбрать фото',
@@ -155,21 +207,47 @@ export const TRANSLATIONS = {
     tabSettings: '設定',
 
     // Dashboard Showcase
-    dashboardTitle: 'StickerSmash',
-    dashboardSubtitle: '写真をステッカーで楽しく彩ろう',
-    before: '前',
-    after: '後',
-    originalPhoto: '元の写真',
-    withStickers: 'ステッカー付き',
-    howItWorks: '使い方',
-    step1Title: '1. 写真を選択',
-    step1Desc: 'ギャラリーから選ぶかカメラで撮影',
-    step2Title: '2. ステッカーを配置',
-    step2Desc: '拡大・縮小して自由に配置',
-    step3Title: '3. 保存と共有',
-    step3Desc: 'ワンタップでギャラリーに保存',
+    dashboardTitle: 'StickerSmash Studio',
+    dashboardSubtitle: 'ステッカーで写真に新しい命を吹き込もう',
+    resultsShowcase: '制作事例ギャラリー',
+    filterAll: 'すべて',
+    filterPortrait: 'ポートレート',
+    filterFun: '楽しい',
+    filterParty: 'パーティー',
+    filterArt: 'アート',
+
+    // Showcase Card Titles
+    cardResult1Title: '蝶ときらめき',
+    cardResult1Desc: '上品な3Dバタフライと輝く星',
+    cardResult2Title: 'エレガントなクラウン',
+    cardResult2Desc: 'ゴールドクラウンと桜の花で彩るポートレート',
+    cardResult3Title: '愛らしい笑顔とハート',
+    cardResult3Desc: '3Dスマイルとロマンチックなリボン',
+    cardResult4Title: 'パーティー気分',
+    cardResult4Desc: 'お祝いのスマイルときらめく演出',
+
+    // Project Explanation & Goal
+    projectGoalTitle: 'プロジェクトの目的と役割',
+    projectGoalText: 'StickerSmashは、誰もが直感的に写真を魅力的なアート作品に変えることができるモダンなモバイルアプリです。日常の写真やポートレートに鮮やかなステッカーを重ね、手軽に心躍るビジュアル作品を創り出すことを目指しています。',
+    howItWorksTitle: 'アプリの仕組みと使い方',
+    howItWorksText: '操作はとてもシンプルです。ギャラリーから写真を選ぶかカメラで撮影し、ステッカーを選んで自由にキャンバス上に配置します。ドラッグでの移動やダブルタップでのサイズ変更に対応。完成した作品はワンタップで端末のフォトライブラリに保存されます。',
+    feature1Title: '直感的なジェスチャー',
+    feature1Desc: 'ドラッグ移動とダブルタップによるサイズ調整。',
+    feature2Title: '安心のオフライン動作',
+    feature2Desc: '写真は端末内でのみ安全に処理されます。',
+    feature3Title: '高品質保存',
+    feature3Desc: '透かしなしの高画質でそのまま書き出し。',
+
     startCreating: '作成を始める',
     choosePhotoBtn: '写真を選択',
+
+    // Picker Categories & API
+    tab3dArt: '3Dステッカー',
+    tabEmojis: '絵文字',
+    tabBadges: 'バッジ',
+    tabOnlineApi: '🌐 オンラインAPI',
+    loadingApi: 'APIから絵文字を取得中...',
+    refreshApi: '更新',
 
     // Studio Screen
     choosePhoto: '写真を選択',
@@ -228,21 +306,47 @@ export const TRANSLATIONS = {
     tabSettings: 'Settings',
 
     // Dashboard Showcase
-    dashboardTitle: 'StickerSmash',
-    dashboardSubtitle: 'Transform your photos with fun stickers',
-    before: 'Before',
-    after: 'After',
-    originalPhoto: 'Original Photo',
-    withStickers: 'With Stickers',
-    howItWorks: 'How it works',
-    step1Title: '1. Choose Photo',
-    step1Desc: 'Pick from your gallery or capture with camera',
-    step2Title: '2. Add Stickers',
-    step2Desc: 'Drag, scale and decorate as you like',
-    step3Title: '3. Save & Share',
-    step3Desc: 'Save to photo gallery in one tap',
+    dashboardTitle: 'StickerSmash Studio',
+    dashboardSubtitle: 'Transform your photos with interactive stickers',
+    resultsShowcase: 'Project Results Gallery',
+    filterAll: 'All',
+    filterPortrait: 'Portrait',
+    filterFun: 'Fun',
+    filterParty: 'Party',
+    filterArt: 'Art',
+
+    // Showcase Card Titles
+    cardResult1Title: 'Butterfly & Sparkles',
+    cardResult1Desc: 'Delicate 3D butterfly with aesthetic sparkles',
+    cardResult2Title: 'Dainty Crown & Blossom',
+    cardResult2Desc: 'Golden crown and delicate cherry blossom',
+    cardResult3Title: 'Hearts & Lovely Ribbon',
+    cardResult3Desc: '3D loving smile with sparkling hearts',
+    cardResult4Title: 'Party Joy & Celebration',
+    cardResult4Desc: 'Festive celebration smile and glowing star',
+
+    // Project Explanation & Goal
+    projectGoalTitle: 'Project Mission & Purpose',
+    projectGoalText: 'StickerSmash is a sleek mobile studio designed to help anyone transform everyday photos into delightful, personalized visual stories. The goal is to provide a seamless, enjoyable creative workflow where simple pictures become expressive and memorable in seconds.',
+    howItWorksTitle: 'How the App Works',
+    howItWorksText: 'The creative journey is straightforward: choose a photo from your gallery or snap a new one with your camera. Place curated stickers on the canvas, freely drag them around, and double-tap to adjust their size. Your finished masterpiece is exported directly to your photo library in high quality.',
+    feature1Title: 'Gesture Control',
+    feature1Desc: 'Smooth drag, double-tap resize, and tap to delete.',
+    feature2Title: 'Fast & Private',
+    feature2Desc: 'All editing happens securely offline on your device.',
+    feature3Title: 'High Quality Export',
+    feature3Desc: 'Clean, watermark-free images ready to share.',
+
     startCreating: 'Start Creating',
     choosePhotoBtn: 'Choose Photo',
+
+    // Picker Categories & API
+    tab3dArt: '3D Stickers',
+    tabEmojis: 'Emojis',
+    tabBadges: 'Badges',
+    tabOnlineApi: '🌐 Live API',
+    loadingApi: 'Loading live emojis from API...',
+    refreshApi: 'Refresh',
 
     // Studio Screen
     choosePhoto: 'Choose Photo',

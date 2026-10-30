@@ -1,9 +1,11 @@
 import { SymbolView } from 'expo-symbols';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
   FlatList,
   Modal,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -16,6 +18,10 @@ import {
   IMAGE_STICKERS,
   type StickerData,
 } from '@/constants/stickers';
+import {
+  fetchLiveEmojis,
+  type EmojiApiCategory,
+} from '@/services/emoji-api';
 import { useLanguage } from '@/context/language-context';
 import { useTheme } from '@/context/theme-context';
 
@@ -25,7 +31,16 @@ type Props = {
   onSelectSticker: (sticker: StickerData) => void;
 };
 
-type Category = 'art' | 'emojis' | 'badges';
+type Category = 'art' | 'emojis' | 'badges' | 'api';
+
+const API_CATEGORIES: { id: EmojiApiCategory; label: string }[] = [
+  { id: 'all', label: 'All' },
+  { id: 'smileys-and-people', label: 'Smileys' },
+  { id: 'animals-and-nature', label: 'Animals' },
+  { id: 'food-and-drink', label: 'Food' },
+  { id: 'objects', label: 'Objects' },
+  { id: 'symbols', label: 'Symbols' },
+];
 
 export default function EmojiPicker({
   isVisible,
@@ -36,6 +51,25 @@ export default function EmojiPicker({
   const { colors } = useTheme();
   const [activeTab, setActiveTab] = useState<Category>('art');
 
+  // Live API State
+  const [apiEmojis, setApiEmojis] = useState<StickerData[]>([]);
+  const [isLoadingApi, setIsLoadingApi] = useState(false);
+  const [selectedApiCategory, setSelectedApiCategory] =
+    useState<EmojiApiCategory>('all');
+
+  const loadApiData = async (cat: EmojiApiCategory = selectedApiCategory) => {
+    setIsLoadingApi(true);
+    const data = await fetchLiveEmojis(cat);
+    setApiEmojis(data);
+    setIsLoadingApi(false);
+  };
+
+  useEffect(() => {
+    if (activeTab === 'api' && apiEmojis.length === 0) {
+      loadApiData('all');
+    }
+  }, [activeTab]);
+
   const getActiveData = (): StickerData[] => {
     switch (activeTab) {
       case 'art':
@@ -44,6 +78,8 @@ export default function EmojiPicker({
         return EMOJI_STICKERS;
       case 'badges':
         return BADGE_STICKERS;
+      case 'api':
+        return apiEmojis;
     }
   };
 
@@ -83,9 +119,10 @@ export default function EmojiPicker({
                     styles.tabText,
                     { color: activeTab === 'art' ? colors.text : colors.textSecondary },
                   ]}>
-                  Art
+                  {t('tab3dArt')}
                 </Text>
               </TouchableOpacity>
+
               <TouchableOpacity
                 style={[styles.tab, activeTab === 'emojis' && { backgroundColor: colors.card }]}
                 onPress={() => setActiveTab('emojis')}>
@@ -94,9 +131,10 @@ export default function EmojiPicker({
                     styles.tabText,
                     { color: activeTab === 'emojis' ? colors.text : colors.textSecondary },
                   ]}>
-                  Emoji
+                  {t('tabEmojis')}
                 </Text>
               </TouchableOpacity>
+
               <TouchableOpacity
                 style={[styles.tab, activeTab === 'badges' && { backgroundColor: colors.card }]}
                 onPress={() => setActiveTab('badges')}>
@@ -105,43 +143,111 @@ export default function EmojiPicker({
                     styles.tabText,
                     { color: activeTab === 'badges' ? colors.text : colors.textSecondary },
                   ]}>
-                  Badge
+                  {t('tabBadges')}
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.tab, activeTab === 'api' && { backgroundColor: colors.card }]}
+                onPress={() => setActiveTab('api')}>
+                <Text
+                  style={[
+                    styles.tabText,
+                    { color: activeTab === 'api' ? colors.accent : colors.textSecondary },
+                    activeTab === 'api' && { fontWeight: '700' },
+                  ]}>
+                  {t('tabOnlineApi')}
                 </Text>
               </TouchableOpacity>
             </View>
+
+            {/* Sub-bar for Live API Categories */}
+            {activeTab === 'api' && (
+              <View style={styles.apiCategoryBar}>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.apiCategoryScroll}>
+                  {API_CATEGORIES.map((cat) => {
+                    const isSelected = selectedApiCategory === cat.id;
+                    return (
+                      <TouchableOpacity
+                        key={cat.id}
+                        style={[
+                          styles.apiChip,
+                          {
+                            backgroundColor: isSelected ? colors.accent : colors.card,
+                            borderColor: colors.border,
+                          },
+                        ]}
+                        onPress={() => {
+                          setSelectedApiCategory(cat.id);
+                          loadApiData(cat.id);
+                        }}>
+                        <Text
+                          style={[
+                            styles.apiChipText,
+                            {
+                              color: isSelected ? colors.accentText : colors.textSecondary,
+                              fontWeight: isSelected ? '700' : '500',
+                            },
+                          ]}>
+                          {cat.label}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                  <TouchableOpacity
+                    style={[styles.apiRefreshBtn, { backgroundColor: colors.card, borderColor: colors.border }]}
+                    onPress={() => loadApiData(selectedApiCategory)}>
+                    <SymbolView
+                      name={{ ios: 'arrow.clockwise', android: 'refresh', web: 'refresh' }}
+                      size={14}
+                      tintColor={colors.accent}
+                    />
+                  </TouchableOpacity>
+                </ScrollView>
+              </View>
+            )}
           </View>
 
-          {/* Stickers Grid */}
-          <FlatList
-            data={getActiveData()}
-            numColumns={4}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.listContent}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={[styles.stickerItem, { backgroundColor: colors.surface2, borderColor: colors.border }]}
-                activeOpacity={0.7}
-                onPress={() => {
-                  onSelectSticker(item);
-                  onClose();
-                }}>
-                {item.type === 'image' ? (
-                  <Image
-                    source={item.source}
-                    style={styles.stickerImage}
-                    contentFit="contain"
-                  />
-                ) : (
-                  <Text style={styles.emojiText}>{item.text}</Text>
-                )}
-                <Text
-                  style={[styles.stickerName, { color: colors.textSecondary }]}
-                  numberOfLines={1}>
-                  {item.name}
-                </Text>
-              </TouchableOpacity>
-            )}
-          />
+          {/* Stickers / Emojis Grid or Loader */}
+          {activeTab === 'api' && isLoadingApi ? (
+            <View style={styles.loaderContainer}>
+              <ActivityIndicator size="large" color={colors.accent} />
+              <Text style={[styles.loaderText, { color: colors.textSecondary }]}>
+                {t('loadingApi')}
+              </Text>
+            </View>
+          ) : (
+            <FlatList
+              data={getActiveData()}
+              numColumns={4}
+              keyExtractor={(item) => item.id}
+              contentContainerStyle={styles.listContent}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={[styles.stickerItem, { backgroundColor: colors.surface2, borderColor: colors.border }]}
+                  activeOpacity={0.7}
+                  onPress={() => {
+                    onSelectSticker(item);
+                    onClose();
+                  }}>
+                  {item.type === 'image' ? (
+                    <Image
+                      source={item.source}
+                      style={styles.stickerImage}
+                      contentFit="contain"
+                    />
+                  ) : (
+                    <Text style={styles.emojiText}>{item.text}</Text>
+                  )}
+                  <Text
+                    style={[styles.stickerName, { color: colors.textSecondary }]}
+                    numberOfLines={1}>
+                    {item.name}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            />
+          )}
         </View>
       </View>
     </Modal>
@@ -158,7 +264,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFill,
   },
   modalContent: {
-    height: '50%',
+    height: '56%',
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     borderTopWidth: 1,
@@ -167,7 +273,7 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: 20,
     paddingTop: 10,
-    paddingBottom: 14,
+    paddingBottom: 12,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   handle: {
@@ -208,8 +314,42 @@ const styles = StyleSheet.create({
     borderRadius: 7,
   },
   tabText: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: '600',
+  },
+  apiCategoryBar: {
+    marginTop: 10,
+  },
+  apiCategoryScroll: {
+    gap: 6,
+    alignItems: 'center',
+  },
+  apiChip: {
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 14,
+    borderWidth: 1,
+  },
+  apiChipText: {
+    fontSize: 11,
+  },
+  apiRefreshBtn: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  loaderContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+    gap: 12,
+  },
+  loaderText: {
+    fontSize: 13,
   },
   listContent: {
     padding: 14,
@@ -226,12 +366,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   stickerImage: {
-    width: 42,
-    height: 42,
+    width: 44,
+    height: 44,
     marginBottom: 4,
   },
   emojiText: {
-    fontSize: 30,
+    fontSize: 32,
     marginBottom: 4,
   },
   stickerName: {
