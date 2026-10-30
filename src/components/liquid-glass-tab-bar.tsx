@@ -16,6 +16,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useLanguage } from '@/context/language-context';
 import { useTheme } from '@/context/theme-context';
 
@@ -69,14 +70,15 @@ const ROUTE_PATH_MAP: Record<string, string> = {
 };
 
 const { width: screenWidth } = Dimensions.get('window');
-const BAR_MAX_WIDTH = Math.min(screenWidth - 32, 420);
-const BAR_HEIGHT = 62;
-const INDICATOR_HEIGHT = 48;
+const BAR_MAX_WIDTH = Math.min(screenWidth - 24, 420);
+const BAR_HEIGHT = 66;
+const INDICATOR_HEIGHT = 52;
 
 export default function LiquidGlassTabBar({
   state,
   navigation,
 }: CustomTabBarProps) {
+  const insets = useSafeAreaInsets();
   const { t } = useLanguage();
   const { colors, isDark } = useTheme();
 
@@ -102,13 +104,15 @@ export default function LiquidGlassTabBar({
 
   const indicatorStyle = useAnimatedStyle(() => {
     return {
-      width: Math.max(tabWidth - 8, 20),
-      transform: [{ translateX: translateX.value + 4 }],
+      width: Math.max(tabWidth - 6, 20),
+      transform: [{ translateX: translateX.value + 3 }],
     };
   });
 
+  const bottomOffset = Math.max(insets.bottom, Platform.OS === 'ios' ? 20 : 12);
+
   return (
-    <View style={styles.floatingContainer} pointerEvents="box-none">
+    <View style={[styles.floatingContainer, { bottom: bottomOffset }]} pointerEvents="box-none">
       <View
         onLayout={onLayout}
         style={[
@@ -134,7 +138,7 @@ export default function LiquidGlassTabBar({
             {
               backgroundColor: isDark
                 ? 'rgba(26, 28, 34, 0.76)'
-                : 'rgba(255, 255, 255, 0.78)',
+                : 'rgba(255, 255, 255, 0.80)',
             },
           ]}
         />
@@ -194,8 +198,8 @@ export default function LiquidGlassTabBar({
             const textTint = isFocused
               ? colors.accent
               : isDark
-              ? 'rgba(255, 255, 255, 0.60)'
-              : 'rgba(0, 0, 0, 0.60)';
+              ? 'rgba(255, 255, 255, 0.65)'
+              : 'rgba(0, 0, 0, 0.65)';
 
             return (
               <TouchableOpacity
@@ -203,15 +207,18 @@ export default function LiquidGlassTabBar({
                 activeOpacity={0.7}
                 onPress={onPress}
                 style={styles.tabButton}>
-                <SymbolView
-                  name={{
-                    ios: (isFocused ? config.sf.selected : config.sf.default) as any,
-                    android: config.md as any,
-                    web: config.md as any,
-                  }}
-                  size={21}
-                  tintColor={iconTint}
-                />
+                <View style={styles.iconContainer}>
+                  <SymbolView
+                    name={{
+                      ios: (isFocused ? config.sf.selected : config.sf.default) as any,
+                      android: config.md as any,
+                      web: config.md as any,
+                    }}
+                    size={22}
+                    style={styles.symbolStyle}
+                    tintColor={iconTint}
+                  />
+                </View>
                 <Text
                   numberOfLines={1}
                   style={[
@@ -235,7 +242,6 @@ export default function LiquidGlassTabBar({
 const styles = StyleSheet.create({
   floatingContainer: {
     position: 'absolute',
-    bottom: Platform.OS === 'ios' ? 24 : 16,
     left: 0,
     right: 0,
     alignItems: 'center',
@@ -245,7 +251,7 @@ const styles = StyleSheet.create({
   barWrapper: {
     width: BAR_MAX_WIDTH,
     height: BAR_HEIGHT,
-    borderRadius: 31,
+    borderRadius: 33,
     overflow: 'hidden',
     borderWidth: 1,
     shadowColor: '#000',
@@ -258,7 +264,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 7,
     height: INDICATOR_HEIGHT,
-    borderRadius: 24,
+    borderRadius: 26,
     borderWidth: 1,
   },
   tabsRow: {
@@ -271,11 +277,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: '100%',
-    paddingVertical: 4,
+    paddingVertical: 5,
+  },
+  iconContainer: {
+    width: 28,
+    height: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'visible',
+  },
+  symbolStyle: {
+    overflow: 'visible',
   },
   tabLabel: {
-    fontSize: 10,
-    marginTop: 3,
+    fontSize: 10.5,
+    marginTop: 2,
     letterSpacing: -0.2,
   },
 });

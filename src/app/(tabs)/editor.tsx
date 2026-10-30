@@ -27,10 +27,10 @@ import { useLanguage } from '@/context/language-context';
 import { useTheme } from '@/context/theme-context';
 
 const PlaceholderImage = require('@/assets/images/background-image.png');
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
-const CANVAS_WIDTH = Math.min(width - 48, 330);
-const CANVAS_HEIGHT = Math.round(CANVAS_WIDTH * 1.35);
+const CANVAS_WIDTH = Math.min(width - 48, 310);
+const CANVAS_HEIGHT = Math.round(Math.min(CANVAS_WIDTH * 1.30, height * 0.44));
 
 export default function StudioScreen() {
   const { t } = useLanguage();
@@ -464,8 +464,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
-    paddingTop: 12,
-    paddingBottom: Platform.OS === 'ios' ? 84 : 70,
+    paddingTop: 10,
+    paddingBottom: Platform.OS === 'ios' ? 104 : 96,
     borderTopWidth: StyleSheet.hairlineWidth,
   },
   actionBtn: {
@@ -485,7 +485,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     minWidth: 80,
-    top: -4,
   },
   mainIconCircle: {
     width: 54,
