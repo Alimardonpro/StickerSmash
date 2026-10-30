@@ -55,8 +55,8 @@ const TAB_CONFIG: Record<
   },
   about: {
     translationKey: 'tabSettings',
-    sf: { default: 'info.circle', selected: 'info.circle.fill' },
-    md: 'info',
+    sf: { default: 'gearshape', selected: 'gearshape.fill' },
+    md: 'settings',
   },
 };
 
