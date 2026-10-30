@@ -6,6 +6,7 @@ import {
   Alert,
   Dimensions,
   FlatList,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -120,8 +121,8 @@ export default function DashboardScreen() {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ['images'],
-        allowsEditing: true,
-        quality: 1,
+        allowsEditing: Platform.OS === 'ios',
+        quality: 0.8,
       });
 
       if (!result.canceled && result.assets[0]?.uri) {

@@ -54,18 +54,34 @@ export default function StudioScreen() {
     }
   }, [params.initialUri]);
 
+  // Handle Android Activity recreation after camera intent
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      ImagePicker.getPendingResultAsync()
+        .then((result) => {
+          if (result && 'assets' in result && !result.canceled && result.assets?.[0]?.uri) {
+            setSelectedImage(result.assets[0].uri);
+          }
+        })
+        .catch((err) => {
+          console.warn('Pending picker result error:', err);
+        });
+    }
+  }, []);
+
   const handlePickImage = async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ['images'],
-        allowsEditing: true,
-        quality: 1,
+        allowsEditing: Platform.OS === 'ios',
+        quality: 0.8,
       });
 
       if (!result.canceled && result.assets[0]?.uri) {
         setSelectedImage(result.assets[0].uri);
       }
-    } catch {
+    } catch (e) {
+      console.error('Pick image error:', e);
       Alert.alert(t('permissionNeeded'), t('storagePermissionMsg'));
     }
   };
@@ -79,14 +95,15 @@ export default function StudioScreen() {
       }
 
       const result = await ImagePicker.launchCameraAsync({
-        allowsEditing: true,
-        quality: 1,
+        allowsEditing: Platform.OS === 'ios',
+        quality: 0.8,
       });
 
       if (!result.canceled && result.assets[0]?.uri) {
         setSelectedImage(result.assets[0].uri);
       }
-    } catch {
+    } catch (e) {
+      console.error('Take photo error:', e);
       Alert.alert(t('permissionNeeded'), t('cameraPermissionMsg'));
     }
   };
@@ -164,10 +181,13 @@ export default function StudioScreen() {
     setIsSaving(true);
     setSelectedStickerId(null);
 
+    // Give React time to unmount active selection outlines before taking snapshot
+    await new Promise((resolve) => setTimeout(resolve, 80));
+
     try {
       const localUri = await captureRef(imageRef, {
         format: 'png',
-        quality: 1,
+        quality: 0.9,
       });
 
       await saveCreation({
