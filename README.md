@@ -9,8 +9,9 @@
 
 ---
 
-## 📱 Yuklab olish (APK Download)
+## 📱 Yuklab olish va Jonli Veb-versiya
 
+- 🌐 **Jonli Veb-versiya (Live Web Deployment)**: [https://alimardon23-stickersmash.expo.app](https://alimardon23-stickersmash.expo.app)
 - 📲 **To'g'ridan-to'g'ri APK yuklab olish (v1.0.1)**: [Yuklab olish (Direct APK)](https://expo.dev/artifacts/eas/3fVGZe1joor0-HsEFB2I3Ol4fKBOUTyLzWDd1oVeVeM.apk)
 - 🚀 **EAS Build sahifasi**: [EAS Build Details](https://expo.dev/accounts/alimardon23/projects/stickersmash/builds/a241f4bb-c586-4a3a-b1bd-fbadbdcdbd7c)
 
